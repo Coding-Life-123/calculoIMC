@@ -17,11 +17,22 @@
           <input class="inputs" type="number" placeholder="ingrese su altura en metros" v-model="altura">
         </div>
         <button @click="calcular()">Calcular</button>
-        <p v-text="resultado" v-bind:style="imc < 18.5 ? 'color:yellow;' : ''" ></p>
+        <div class="estado">
+          <h3>Estado:</h3>
+          <p v-text="resultado" 
+            :style="imc < 18.5 
+                      ? 'color: yellow;' 
+                      : imc >= 18.5 && imc < 25 
+                        ? 'color: green;' 
+                        : imc >= 25 && imc < 30 
+                          ? 'color: orange;' 
+                          : 'color: red;'">
+          </p>
+        </div>
       </div>
       <div class="image">
         <img v-show="imc > 0 && imc < 18.5" src="/delgada.jpg" alt="persona delgada">
-        <img  src="/normal.jpg" alt="persona normal">
+        <img v-show="imc >= 18.5 && imc < 25" src="/normal.jpg" alt="persona normal">
         <img v-show="imc >= 25 && imc < 30" src="/sobrepeso.jpg" alt="persona sobrepeso">
         <img v-show="imc >= 30" src="/gordo.jpg" alt="persona gorda">
       </div>
@@ -31,11 +42,15 @@
 
 <script setup>
   import { ref } from 'vue';
-  //v-show="imc >= 18.5 && imc < 25"
-  const nombre = ref('')
-  const altura = ref('')
-  const peso = ref('')
-  const imc = ref(0)
+  const nombre = ref('');
+  const altura = ref('');
+  const peso = ref('');
+  const imc = ref(0);
+  let resultado = ref('');
+
+
+
+  
   
   function calcular(){
     console.log(nombre.value);
@@ -44,6 +59,18 @@
 
     imc.value = peso.value / (altura.value * altura.value)
     console.log(imc.value)
+
+    if (imc.value < 18.5) {
+      resultado.value = "Estás flaco, anoréxico"
+    } else if (imc.value >= 18.5 && imc.value < 25) {
+      resultado.value = "Estás en un peso normal"
+    } else if (imc.value >= 25 && imc.value < 30) {
+      resultado.value = "Estás en sobrepeso"
+    } else if (imc.value >= 30){
+      resultado.value = "Estás gordo, pedazo ballena"
+    }
+
+    console.log(imc > 18.5)
   }
 </script>
 
@@ -61,7 +88,7 @@
 
   h1{
     margin: 0 auto;
-    margin-top: 20vh;
+    margin-top: 10vh;
   }
   
   main{
@@ -94,6 +121,8 @@
     border: none;
     background-color: rgb(100, 100, 100);
     color: white; 
+    padding: 10px;
+    border-radius: 10px;
   }
 
   div .image{
@@ -102,6 +131,30 @@
   }
 
   img{
-    width: fit-content;
+    height: 430px;
+    width: 360px;
+    object-fit: cover;
+  }
+
+  .cuestionario > button{
+    border: none;
+    border-radius: 20px;
+    padding: 10px;
+    width: 70%;
+    margin: 0 auto;
+    font-weight: 600;
+  }
+
+  .estado{
+    border: 3px solid black;
+    border-radius: 10px;
+    padding: 5px;
+    background-color: rgb(0, 0, 0);
+  }
+
+  .estado p{
+    margin-top: 5px;
+    margin-left: 5px;
+    font-weight: 600;
   }
 </style>
